@@ -1,4 +1,4 @@
-
+//localhost:3000/aboutus
 const About=() =>{
     return <h1>This is an about page</h1>
 }
