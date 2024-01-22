@@ -1,20 +1,17 @@
 import { useRouter } from "next/router";
 import { DUMMY_MEETUPS } from "../index";
 import MeetupItem from "@/components/meetups/MeetupItem";
+import { MongoClient , ObjectId} from "mongodb";
 
-const MeetupDetail = (props) => {
+const MeetupDetail = ({meetup}) => {
 
-    const router = useRouter();
-    const meetupId = router.query.meetUpId;  
-    const meetup = props.meetup.find(meetup => meetup.id === meetupId);
-    // console.log(meetup);
+    // const router = useRouter();
+    // const meetupId = router.query.meetUpId;  
+    
+    console.log(meetup);
     return(
-        <MeetupItem
-        key={meetup.id}
-        id={meetup.id}
-        image={meetup.image}
-        title={meetup.title}
-        address={meetup.address}
+        <MeetupItem key={meetup.id} id={meetup.id} image={meetup?.image}
+        title={meetup?.title} address={meetup?.address}
         showDetails={false}
       />
     )
@@ -26,34 +23,56 @@ const MeetupDetail = (props) => {
 //- it is used when there are a lot of dynamic routes but we only want to the pre-render the most 
 // used ones and it will pre-generate others when requested
 export async function getStaticPaths(){
-  return {
-    fallback:false,
-    paths:[
-      {
-        params:{
-          meetUpId:'m1'
+  try {
+    const client = await MongoClient.connect(process.env.MONGODB_SRV);
+    const db = client.db();
+    const meetupCollection = db.collection('meetups');
+    const meetups = await meetupCollection.find().toArray();
+    client.close();
+    return {
+      fallback:false,
+      paths:meetups.map(meetup =>{
+        return {
+          params:{
+            meetUpId:meetup._id.toString()
+          }
         }
-      },
-      {
-        params:{
-          meetUpId:'m2'
-        }
-      },
-      {
-        params:{
-          meetUpId:'m3'
-        }
-      }
-    ]
+      })
+    }
+    
+  } catch (error) {
+    console.log(error)
   }
 }
 export async function getStaticProps(context){
   const meetUpId = context.params.meetUpId;
-  console.log(meetUpId);
-  return {
-    props:{
-      meetup:DUMMY_MEETUPS
+  console.log(meetUpId)
+  try {
+    const client = await MongoClient.connect(process.env.MONGODB_SRV);
+    const db = client.db();
+    const meetupCollection = db.collection('meetups');
+    const meetup = await meetupCollection.findOne({_id:new ObjectId(meetUpId)});
+    console.log(meetup);
+
+    client.close();
+    
+    return {
+      props:{
+        meetup:{
+          id:meetup._id.toString(),
+          title:meetup.title,
+          address:meetup.address,
+          description:meetup.description,
+          image:meetup.image,
+        }
+      }
     }
+  } catch (error) {
+    console.log(error)
+    return {
+      props: {},
+    };
   }
+   
 }
 export default MeetupDetail;

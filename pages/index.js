@@ -3,29 +3,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { MongoClient } from "mongodb";
 // import { useEffect, useState } from "react";
-export const DUMMY_MEETUPS=[
-    {
-        id:'m1',
-        title:'A First Meetup',
-        image:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/800px-Colosseo_2020.jpg',
-        address:"some address 2111",
-        description:"This is a first meetup"
-    },
-    {
-        id:'m2',
-        title:'A second Meetup',
-        image:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/800px-Colosseo_2020.jpg',
-        address:"some address4545",
-        description:"This is a second meetup"
-    },
-    {
-        id:'m3',
-        title:'A third Meetup',
-        image:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/800px-Colosseo_2020.jpg',
-        address:"spme addrwes -33333",
-        description:"This is the third meetup"
-    }
-]
+
 function HomePage(props){
     // const [loadedMeetups,setLoadedMeetups] = useState([]);
     // useEffect(()=>{
@@ -57,7 +35,6 @@ export async function getStaticProps(){
             const meetupsCollection = db.collection('meetups');
             result =await meetupsCollection.find().toArray();
             console.log(result)
-         
             client.close();
         }
         catch(error){
