@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { DUMMY_MEETUPS } from "../index";
 import MeetupItem from "@/components/meetups/MeetupItem";
 import { MongoClient , ObjectId} from "mongodb";
+import Head from "next/head";
 
 const MeetupDetail = ({meetup}) => {
 
@@ -10,10 +11,16 @@ const MeetupDetail = ({meetup}) => {
     
     console.log(meetup);
     return(
-        <MeetupItem key={meetup.id} id={meetup.id} image={meetup?.image}
-        title={meetup?.title} address={meetup?.address}
-        showDetails={false}
-      />
+       <>
+        <Head>
+          <title>{meetup.title}</title>
+          <meta name="description" content={meetup.description} />
+        </Head>
+           <MeetupItem key={meetup.id} id={meetup.id} image={meetup?.image}
+          title={meetup?.title} address={meetup?.address}
+          showDetails={false}
+        />
+       </>
     )
 }/*In the pages directory, the getStaticPaths function is used
  to define the dynamic paths that should be pre-rendered at build time. */

@@ -1,19 +1,20 @@
 import MeetupList from "@/components/meetups/MeetupList";
-import axios from "axios";
-import { useEffect } from "react";
 import { MongoClient } from "mongodb";
 // import { useEffect, useState } from "react";
+import Head from "next/head";
 
 function HomePage(props){
-    // const [loadedMeetups,setLoadedMeetups] = useState([]);
-    // useEffect(()=>{
-    //     //react useffect will take place due to which DUMMY_MEETUPS wont appear
-    //     //in site source data so bad SEO, also only the data on the first render
-    //     //goes for SEO
-    //     setLoadedMeetups(DUMMY_MEETUPS);
-    // },[])
    
-    return <MeetupList meetups={props.meetups}/>
+   
+    return (
+        <>
+            <Head>
+                <title>Meetups</title>
+                <meta name="description" content="The list of all the meetups" />
+            </Head>
+            <MeetupList meetups={props.meetups}/>
+        </>
+    )
 }
 /* this function is called before the compopnent function
 used for getting the data that the component needs so that the data can be used for pre-rendering
